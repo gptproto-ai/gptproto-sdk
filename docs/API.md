@@ -292,9 +292,9 @@ passes them through untouched.
 | Provider | Supported values |
 |----------|-------------------|
 | `vidu` | 512 |
+| `google` | 1K, 2K, 4K |
 | `wan` | 720p |
 | `seedream` | (resolution used as size fallback) |
-| `google` | (resolution used as size fallback) |
 
 `aspect_ratio` — available values: `1:1`, `1:2`, `1:4`, `1:8`, `2:1`, `2:3`, `3:2`, `3:4`, `4:1`, `4:3`, `4:5`, `5:4`, `8:1`, `9:16`, `16:9`, `9:19.5`, `19.5:9`, `9:20`, `20:9`, `9:21`, `21:9`, `auto`
 
