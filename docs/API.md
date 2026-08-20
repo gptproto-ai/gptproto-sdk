@@ -223,26 +223,26 @@ passes them through untouched.
 
 ### Enums
 
-`resolution`:
+`resolution` — available values: `480p`, `720p`, `1080p`, `1K`, `2K`, `4K`, `512`, `512p`, `540p`, `768p`
 
-| Value | Supported by |
-|-------|--------------|
-| `480p` | kling |
-| `720p` | kling, veo, vidu, seedance, wan, hailuo, sora |
-| `1080p` | kling, veo, vidu, hailuo, sora |
-| `540p` | hailuo |
-| `512`, `720`, `1080` | vidu |
-| `512p`, `768p`, `1K`, `2K`, `4K` | — |
+| Provider | Supported values |
+|----------|-------------------|
+| `kling` | 480p, 720p, 1080p |
+| `veo` | 720p, 1080p |
+| `vidu` | 512, 720, 1080, 720p, 1080p |
+| `seedance` | 720p |
+| `wan` | 720p |
+| `hailuo` | 540p, 720p, 1080p |
+| `sora` | 720, 1080 (translates to pixel size) |
 
-`aspect_ratio`:
+`aspect_ratio` — available values: `16:9`, `9:16`, `1:1`, `4:3`, `3:4`, `3:2`, `2:3`, `21:9`, `9:21`, `auto`
 
-| Value | Supported by |
-|-------|--------------|
-| `16:9` | kling, veo, vidu, seedance |
-| `9:16` | kling, veo, vidu, seedance |
-| `1:1` | kling |
-| `auto` | vidu |
-| `4:3`, `3:4`, `3:2`, `2:3`, `21:9`, `9:21` | — |
+| Provider | Supported values |
+|----------|-------------------|
+| `kling` | 16:9, 9:16, 1:1 |
+| `veo` | 16:9, 9:16 |
+| `vidu` | 16:9, 9:16, auto |
+| `seedance` | 16:9, 9:16 |
 
 ### Support matrix
 
@@ -287,37 +287,41 @@ passes them through untouched.
 
 ### Enums
 
-`resolution`:
+`resolution` — available values: `512`, `1K`, `2K`, `4K`
 
-| Value | Supported by |
-|-------|--------------|
-| `512` | vidu |
-| `1K`, `2K`, `4K` | — |
+| Provider | Supported values |
+|----------|-------------------|
+| `vidu` | 512 |
+| `wan` | 720p |
+| `seedream` | (resolution used as size fallback) |
+| `google` | (resolution used as size fallback) |
 
-`aspect_ratio`:
+`aspect_ratio` — available values: `1:1`, `1:2`, `1:4`, `1:8`, `2:1`, `2:3`, `3:2`, `3:4`, `4:1`, `4:3`, `4:5`, `5:4`, `8:1`, `9:16`, `16:9`, `9:19.5`, `19.5:9`, `9:20`, `20:9`, `9:21`, `21:9`, `auto`
 
-| Value | Supported by |
-|-------|--------------|
-| `1:1`, `1:2`, `1:4`, `1:8`, `2:1`, `2:3`, `3:2`, `3:4`, `4:1`, `4:3`, `4:5`, `5:4`, `8:1`, `9:16`, `16:9`, `9:19.5`, `19.5:9`, `9:20`, `20:9`, `9:21`, `21:9`, `auto` | google, vidu |
+| Provider | Supported values |
+|----------|-------------------|
+| `google` | all 22 values |
+| `vidu` | all 22 values |
 
-`quality`:
+`quality` — available values: `auto`, `low`, `medium`, `high`
 
-| Value | Supported by |
-|-------|--------------|
-| `auto`, `low`, `medium`, `high` | openai |
+| Provider | Supported values |
+|----------|-------------------|
+| `openai` | auto, low, medium, high |
 
-`output_format`:
+`output_format` — available values: `png`, `jpeg`, `webp`, `svg`
 
-| Value | Supported by |
-|-------|--------------|
-| `png`, `jpeg` | google, openai, qwen |
-| `webp`, `svg` | openai, qwen |
+| Provider | Supported values |
+|----------|-------------------|
+| `google` | png, jpeg |
+| `openai` | png, jpeg, webp, svg |
+| `qwen` | png, jpeg, webp, svg |
 
-`background`:
+`background` — available values: `auto`, `transparent`, `opaque`
 
-| Value | Supported by |
-|-------|--------------|
-| `auto`, `transparent`, `opaque` | openai |
+| Provider | Supported values |
+|----------|-------------------|
+| `openai` | auto, transparent, opaque |
 
 ### Support matrix
 
