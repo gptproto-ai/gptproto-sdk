@@ -232,7 +232,7 @@ passes them through untouched.
 | `vidu` | 512, 720, 1080, 720p, 1080p |
 | `seedance` | 720p |
 | `wan` | 720p |
-| `hailuo` | 540p, 720p, 1080p |
+| `hailuo` | 540p, 720p, 1080p, 512p, 768p |
 | `sora` | 720, 1080 (translates to pixel size) |
 
 `aspect_ratio` — available values: `16:9`, `9:16`, `1:1`, `4:3`, `3:4`, `3:2`, `2:3`, `21:9`, `9:21`, `auto`
@@ -240,7 +240,7 @@ passes them through untouched.
 | Provider | Supported values |
 |----------|-------------------|
 | `kling` | 16:9, 9:16, 1:1 |
-| `veo` | 16:9, 9:16 |
+| `veo` | 16:9, 9:16, 4:3, 3:4, 3:2, 2:3, 21:9, 9:21 |
 | `vidu` | 16:9, 9:16, auto |
 | `seedance` | 16:9, 9:16 |
 
