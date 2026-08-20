@@ -1,0 +1,607 @@
+openapi: 3.0.3
+info:
+  title: GPTProto API
+  version: 0.1.0
+  description: |
+    Unified request fields over the GPTProto asynchronous task pipeline.
+    Fields unique to existing GPTProto capabilities are additive extensions. Unknown JSON fields
+    are ignored for forward compatibility. callback_url and provider routing controls are not
+    exposed in this version.
+servers:
+  - url: https://gptproto.com
+    description: Production API URL; SDK clients may override this for the test environment.
+security:
+  - bearerAuth: []
+tags:
+  - name: Video
+    description: Unified asynchronous video generation.
+  - name: Image
+    description: Unified asynchronous image generation.
+  - name: Audio
+    description: Unified speech and voice tasks.
+  - name: Extensions
+    description: Additional GPTProto media capabilities.
+  - name: Tasks
+    description: Unified asynchronous task polling.
+paths:
+  /api/v3/videos:
+    post:
+      tags: [Video]
+      operationId: createVideo
+      summary: Submit an asynchronous video generation task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedVideoRequest'
+      responses:
+        '202':
+          $ref: '#/components/responses/TaskAccepted'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/v3/videos/{id}:
+    get:
+      tags: [Tasks]
+      operationId: getVideoTask
+      summary: Get a video task
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      responses:
+        '200':
+          $ref: '#/components/responses/TaskResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/v3/images:
+    post:
+      tags: [Image]
+      operationId: createImage
+      summary: Submit an asynchronous image generation task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedImageRequest'
+      responses:
+        '202':
+          $ref: '#/components/responses/TaskAccepted'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/v3/audio/speech:
+    post:
+      tags: [Audio]
+      operationId: createSpeech
+      summary: Submit an asynchronous text-to-speech task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedSpeechRequest'
+      responses:
+        '202':
+          $ref: '#/components/responses/TaskAccepted'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/v3/audio/voice-clone:
+    post:
+      tags: [Audio]
+      operationId: createVoiceClone
+      summary: Submit an asynchronous voice-clone task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedVoiceCloneRequest'
+      responses:
+        '202':
+          $ref: '#/components/responses/TaskAccepted'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/v3/lip-sync:
+    post:
+      tags: [Extensions]
+      operationId: createLipSync
+      summary: Submit an asynchronous lip-sync task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedLipSyncRequest'
+      responses:
+        '202':
+          $ref: '#/components/responses/TaskAccepted'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/v3/3d:
+    post:
+      tags: [Extensions]
+      operationId: create3D
+      summary: Submit an asynchronous image-to-3D task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Unified3DRequest'
+      responses:
+        '202':
+          $ref: '#/components/responses/TaskAccepted'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/v3/images/edit:
+    post:
+      tags: [Extensions]
+      operationId: createImageTool
+      summary: Submit an existing image/video utility task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnifiedImageToolRequest'
+      responses:
+        '202':
+          $ref: '#/components/responses/TaskAccepted'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/v3/tasks/result/{id}:
+    get:
+      tags: [Tasks]
+      operationId: getTask
+      summary: Get any non-video unified task
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      responses:
+        '200':
+          $ref: '#/components/responses/TaskResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  parameters:
+    TaskId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    TaskAccepted:
+      description: Task accepted
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UnifiedTaskResult'
+    TaskResult:
+      description: Current task state
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UnifiedTaskResult'
+    BadRequest:
+      description: Invalid request or unsupported model
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UnifiedErrorResponse'
+    Unauthorized:
+      description: Missing or invalid bearer token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UnifiedErrorResponse'
+  schemas:
+    UnifiedVideoRequest:
+      type: object
+      required: [model, prompt]
+      properties:
+        model:
+          type: string
+          description: Open provider/model slug; model values are not a closed enum.
+          example: kling/kling-v3.0-pro
+        prompt:
+          type: string
+          minLength: 1
+        mode:
+          type: string
+          default: auto
+          example: image-to-video
+          description: Open gptproto scene override; provider-specific legacy scenes are preserved.
+        duration:
+          type: integer
+          minimum: 1
+        resolution:
+          $ref: '#/components/schemas/VideoResolution'
+        aspect_ratio:
+          $ref: '#/components/schemas/VideoAspectRatio'
+        size:
+          type: string
+          pattern: '^[1-9][0-9]*x[1-9][0-9]*$'
+          example: 1280x720
+        frame_images:
+          type: array
+          items:
+            $ref: '#/components/schemas/FrameImage'
+        input_references:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReferenceAsset'
+        generate_audio:
+          type: boolean
+          nullable: true
+        seed:
+          type: integer
+        negative_prompt:
+          type: string
+        provider:
+          $ref: '#/components/schemas/ProviderOptions'
+    UnifiedImageRequest:
+      type: object
+      required: [model, prompt]
+      properties:
+        model:
+          type: string
+          example: bytedance/doubao-seedream-4-5-251128
+        prompt:
+          type: string
+          minLength: 1
+        aspect_ratio:
+          $ref: '#/components/schemas/ImageAspectRatio'
+        resolution:
+          $ref: '#/components/schemas/ImageResolution'
+        size:
+          type: string
+          description: Resolution tier or explicit pixels.
+        n:
+          type: integer
+          minimum: 1
+          maximum: 10
+        quality:
+          type: string
+          enum: [auto, low, medium, high]
+        output_format:
+          type: string
+          enum: [png, jpeg, webp, svg]
+        background:
+          type: string
+          enum: [auto, transparent, opaque]
+        seed:
+          type: integer
+        input_references:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImageReference'
+        provider:
+          $ref: '#/components/schemas/ProviderOptions'
+    UnifiedSpeechRequest:
+      type: object
+      required: [model, input, voice]
+      properties:
+        model:
+          type: string
+          example: minimax/speech-02-hd
+        input:
+          type: string
+          minLength: 1
+        voice:
+          type: string
+          description: Open provider-specific voice ID.
+        speed:
+          type: number
+          format: double
+        provider:
+          $ref: '#/components/schemas/ProviderOptions'
+    UnifiedVoiceCloneRequest:
+      type: object
+      required: [model, audio]
+      properties:
+        model: {type: string, example: minimax/speech-2.5-hd-preview-voice-clone}
+        audio: {type: string, format: uri}
+        text: {type: string}
+        custom_voice_id: {type: string}
+        accuracy: {type: number, format: double}
+        need_noise_reduction: {type: boolean}
+        need_volume_normalization: {type: boolean}
+        provider:
+          $ref: '#/components/schemas/ProviderOptions'
+    UnifiedLipSyncRequest:
+      type: object
+      required: [model, video, audio]
+      properties:
+        model: {type: string, example: bytedance/realman_change_lips}
+        video: {type: string, format: uri}
+        audio: {type: string, format: uri}
+        provider:
+          $ref: '#/components/schemas/ProviderOptions'
+    Unified3DRequest:
+      type: object
+      required: [model, image]
+      properties:
+        model: {type: string, example: tripo3d/tripo3d-v2.5}
+        mode:
+          type: string
+          default: image-to-3d
+          description: Open legacy scene string.
+        image: {type: string, format: uri}
+        front_image_url: {type: string, format: uri}
+        back_image_url: {type: string, format: uri}
+        left_image_url: {type: string, format: uri}
+        right_image_url: {type: string, format: uri}
+        provider:
+          $ref: '#/components/schemas/ProviderOptions'
+    UnifiedImageToolRequest:
+      type: object
+      required: [model]
+      description: At least one of image or video is required and is enforced by the server.
+      properties:
+        model: {type: string, example: gptproto/image-upscaler}
+        mode:
+          type: string
+          default: upscale
+          description: Open legacy scene string.
+        image: {type: string, format: uri}
+        video: {type: string, format: uri}
+        creativity: {type: integer, format: int64}
+        target_resolution: {type: string}
+        size: {type: string}
+        output_format:
+          type: string
+          enum: [png, jpeg, webp, svg]
+        enable_base64_output: {type: boolean}
+        enable_sync_mode: {type: boolean}
+        provider:
+          $ref: '#/components/schemas/ProviderOptions'
+    FrameImage:
+      type: object
+      required: [type, frame_type, image_url]
+      properties:
+        type:
+          type: string
+          enum: [image_url]
+        frame_type:
+          type: string
+          enum: [first_frame, last_frame]
+        image_url:
+          $ref: '#/components/schemas/ImageUrl'
+    ReferenceAsset:
+      type: object
+      required: [type, image_url]
+      properties:
+        type:
+          type: string
+          enum: [image_url, audio_url, video_url]
+        image_url:
+          $ref: '#/components/schemas/ImageUrl'
+    ImageReference:
+      type: object
+      required: [type, image_url]
+      properties:
+        type:
+          type: string
+          enum: [image_url]
+        image_url:
+          $ref: '#/components/schemas/ImageUrl'
+    ImageUrl:
+      type: object
+      required: [url]
+      properties:
+        url:
+          type: string
+          format: uri
+    VideoResolution:
+      type: string
+      description: 512, 512p, 540p and 768p are retained gptproto provider extensions.
+      enum: [480p, 720p, 1080p, 1K, 2K, 4K, '512', 512p, 540p, 768p]
+      x-enum-varnames: [RESOLUTION_480P, RESOLUTION_720P, RESOLUTION_1080P, RESOLUTION_1K, RESOLUTION_2K, RESOLUTION_4K, RESOLUTION_512, RESOLUTION_512P, RESOLUTION_540P, RESOLUTION_768P]
+    VideoAspectRatio:
+      type: string
+      description: auto is a retained Vidu extension.
+      enum: ['16:9', '9:16', '1:1', '4:3', '3:4', '3:2', '2:3', '21:9', '9:21', auto]
+      x-enum-varnames: [LANDSCAPE_16_9, PORTRAIT_9_16, SQUARE_1_1, LANDSCAPE_4_3, PORTRAIT_3_4, LANDSCAPE_3_2, PORTRAIT_2_3, ULTRAWIDE_21_9, TALL_9_21, AUTO]
+    ImageResolution:
+      type: string
+      enum: ['512', 1K, 2K, 4K]
+      x-enum-varnames: [RESOLUTION_512, RESOLUTION_1K, RESOLUTION_2K, RESOLUTION_4K]
+    ImageAspectRatio:
+      type: string
+      enum: ['1:1', '1:2', '1:4', '1:8', '2:1', '2:3', '3:2', '3:4', '4:1', '4:3', '4:5', '5:4', '8:1', '9:16', '16:9', '9:19.5', '19.5:9', '9:20', '20:9', '9:21', '21:9', auto]
+      x-enum-varnames: [RATIO_1_1, RATIO_1_2, RATIO_1_4, RATIO_1_8, RATIO_2_1, RATIO_2_3, RATIO_3_2, RATIO_3_4, RATIO_4_1, RATIO_4_3, RATIO_4_5, RATIO_5_4, RATIO_8_1, RATIO_9_16, RATIO_16_9, RATIO_9_19_5, RATIO_19_5_9, RATIO_9_20, RATIO_20_9, RATIO_9_21, RATIO_21_9, AUTO]
+    ProviderOptions:
+      type: object
+      description: Only options is public in this release; routing controls are intentionally hidden.
+      properties:
+        options:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ProviderOption'
+          properties:
+            kwaivgi: {$ref: '#/components/schemas/KwaivgiProviderOption'}
+            kling: {$ref: '#/components/schemas/KwaivgiProviderOption'}
+            google: {$ref: '#/components/schemas/GoogleProviderOption'}
+            google-vertex: {$ref: '#/components/schemas/GoogleProviderOption'}
+            vidu: {$ref: '#/components/schemas/ViduProviderOption'}
+            bytedance: {$ref: '#/components/schemas/SeedanceProviderOption'}
+            doubao: {$ref: '#/components/schemas/SeedanceProviderOption'}
+            alibaba: {$ref: '#/components/schemas/WanProviderOption'}
+            wan: {$ref: '#/components/schemas/WanProviderOption'}
+            minimax: {$ref: '#/components/schemas/MinimaxProviderOption'}
+            openai-reverse: {$ref: '#/components/schemas/SoraReverseProviderOption'}
+    ProviderOption:
+      type: object
+      required: [parameters]
+      properties:
+        parameters:
+          type: object
+          additionalProperties: true
+    KwaivgiProviderOption:
+      type: object
+      required: [parameters]
+      properties:
+        parameters:
+          $ref: '#/components/schemas/KwaivgiParameters'
+    KwaivgiParameters:
+      type: object
+      properties:
+        voice_id: {type: string}
+        voice_language: {type: string, enum: [zh, en]}
+        voice_speed: {type: number}
+        guidance_scale: {type: number}
+        n: {type: integer}
+        cfg_scale: {type: number}
+        use_custom_voice: {type: boolean}
+        use_custom_video: {type: boolean}
+        video_id: {type: string}
+        video_url: {type: string, format: uri}
+        sound_effect_prompt: {type: string}
+        bgm_prompt: {type: string}
+        asmr_mode: {type: boolean}
+        text: {type: string}
+        keep_original_sound: {type: boolean}
+        character_orientation: {type: string, enum: [image, video]}
+        shot_type: {type: string, enum: [customize, intelligence]}
+        voice_list: {type: array, items: {type: object, additionalProperties: true}}
+        multi_prompt: {type: array, items: {type: object, additionalProperties: true}}
+        negative_prompt: {type: string}
+    GoogleProviderOption:
+      type: object
+      required: [parameters]
+      properties:
+        parameters:
+          type: object
+          properties:
+            enhance_prompt: {type: boolean}
+            enable_upsample: {type: boolean}
+    ViduProviderOption:
+      type: object
+      required: [parameters]
+      properties:
+        parameters:
+          type: object
+          properties:
+            subjects: {type: array, items: {type: object, additionalProperties: true}}
+            input_image_n: {type: integer}
+            template: {type: string}
+            style: {type: string, enum: [general, anime]}
+            voice_id: {type: string}
+            is_rec: {type: boolean}
+            movement_amplitude: {type: string, enum: [auto, small, medium, large]}
+            bgm: {type: boolean}
+            sample_count: {type: integer}
+            area: {type: string}
+            beast: {type: string}
+            negative_prompt: {type: string}
+            moderation: {type: string}
+    SeedanceProviderOption:
+      type: object
+      required: [parameters]
+      properties:
+        parameters:
+          type: object
+          properties:
+            camera_fixed: {type: boolean}
+            media_files: {type: array, items: {type: string, format: uri}}
+            is_upload_media: {type: boolean}
+    WanProviderOption:
+      type: object
+      required: [parameters]
+      properties:
+        parameters:
+          type: object
+          properties:
+            enable_prompt_expansion: {type: boolean}
+            watermark: {type: boolean}
+            mode: {type: string}
+            shot_type: {type: string}
+            n: {type: integer}
+            negative_prompt: {type: string}
+    MinimaxProviderOption:
+      type: object
+      required: [parameters]
+      properties:
+        parameters:
+          type: object
+          properties:
+            enable_prompt_expansion: {type: boolean}
+            go_fast: {type: boolean}
+            emotion: {type: string}
+            enable_base64_output: {type: boolean}
+            enable_sync_mode: {type: boolean}
+            english_normalization: {type: boolean}
+            pitch: {type: integer}
+            volume: {type: number}
+            language_boost: {type: string}
+    SoraReverseProviderOption:
+      type: object
+      required: [parameters]
+      properties:
+        parameters:
+          type: object
+          properties:
+            timestamps: {type: string}
+            from_task: {type: string}
+            url: {type: string, format: uri}
+            character_url: {type: string, format: uri}
+            orientation: {type: string, enum: [portrait, landscape]}
+            show: {type: boolean}
+    UnifiedTaskResult:
+      type: object
+      required: [id, status, polling_url]
+      properties:
+        id: {type: string}
+        generation_id:
+          type: string
+          description: Returned only when the existing downstream pipeline exposes one.
+        status:
+          type: string
+          enum: [pending, in_progress, completed, failed, cancelled, expired]
+        polling_url: {type: string}
+        model: {type: string}
+        native_status:
+          type: string
+          description: Open vendor/legacy status string; never generate as a closed enum.
+        unsigned_urls:
+          type: array
+          items: {type: string}
+        error: {type: string}
+        created_at: {type: string}
+        completed_at:
+          type: string
+          description: Returned only when the existing downstream pipeline exposes one.
+        usage:
+          type: object
+          additionalProperties: true
+          description: Returned only when reliable existing usage data is available.
+        timings:
+          type: object
+          additionalProperties: true
+    UnifiedErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [message, code]
+          properties:
+            message: {type: string}
+            code: {type: integer}

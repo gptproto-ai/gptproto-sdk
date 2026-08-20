@@ -1,0 +1,42 @@
+{
+  "name": "gptproto",
+  "version": "0.1.1",
+  "description": "TypeScript SDK for the gptproto async media generation API",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rm -rf dist && tsc --emitDeclarationOnly && esbuild src/index.ts --bundle --format=esm --platform=node --outfile=dist/index.js && node fix-dts-imports.mjs",
+    "dev": "tsx examples/demo.ts",
+    "generate": "openapi --input ../openapi/openapi.yaml --output ./src/generated --client fetch",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "gptproto",
+    "sdk",
+    "ai",
+    "video-generation",
+    "kling",
+    "veo"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "esbuild": "^0.28.2",
+    "openapi-typescript-codegen": "^0.31.0",
+    "tsx": "^4.23.12",
+    "typescript": "^7.0.2"
+  }
+}

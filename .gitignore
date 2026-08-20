@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+.eggs/
+.venv/
+venv/
+env/
+dist/
+build/
+*.whl
+*.tar.gz
+.python-version
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+gptproto-go-sdk/examples/examples
+gptproto-go-sdk/examples/demo
+
+# Node / TypeScript (planned)
+node_modules/
+*.tsbuildinfo
+
+# IDE / Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env / Secrets
+.env
+*.env
+!.env.example
