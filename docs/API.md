@@ -224,14 +224,25 @@ passes them through untouched.
 ### Enums
 
 `resolution`:
-```
-480p, 720p, 1080p, 1K, 2K, 4K, 512, 512p, 540p, 768p
-```
+
+| Value | Supported by |
+|-------|--------------|
+| `480p` | kling |
+| `720p` | kling, veo, vidu, seedance, wan, hailuo, sora |
+| `1080p` | kling, veo, vidu, hailuo, sora |
+| `540p` | hailuo |
+| `512`, `720`, `1080` | vidu |
+| `512p`, `768p`, `1K`, `2K`, `4K` | — |
 
 `aspect_ratio`:
-```
-16:9, 9:16, 1:1, 4:3, 3:4, 3:2, 2:3, 21:9, 9:21, auto
-```
+
+| Value | Supported by |
+|-------|--------------|
+| `16:9` | kling, veo, vidu, seedance |
+| `9:16` | kling, veo, vidu, seedance |
+| `1:1` | kling |
+| `auto` | vidu |
+| `4:3`, `3:4`, `3:2`, `2:3`, `21:9`, `9:21` | — |
 
 ### Support matrix
 
@@ -277,18 +288,36 @@ passes them through untouched.
 ### Enums
 
 `resolution`:
-```
-512, 1K, 2K, 4K
-```
+
+| Value | Supported by |
+|-------|--------------|
+| `512` | vidu |
+| `1K`, `2K`, `4K` | — |
 
 `aspect_ratio`:
-```
-1:1, 1:2, 1:4, 1:8, 2:1, 2:3, 3:2, 3:4, 4:1, 4:3, 4:5, 5:4, 8:1, 9:16, 16:9, 9:19.5, 19.5:9, 9:20, 20:9, 9:21, 21:9, auto
-```
 
-`quality`: `auto`, `low`, `medium`, `high`
-`output_format`: `png`, `jpeg`, `webp`, `svg`
-`background`: `auto`, `transparent`, `opaque`
+| Value | Supported by |
+|-------|--------------|
+| `1:1`, `1:2`, `1:4`, `1:8`, `2:1`, `2:3`, `3:2`, `3:4`, `4:1`, `4:3`, `4:5`, `5:4`, `8:1`, `9:16`, `16:9`, `9:19.5`, `19.5:9`, `9:20`, `20:9`, `9:21`, `21:9`, `auto` | google, vidu |
+
+`quality`:
+
+| Value | Supported by |
+|-------|--------------|
+| `auto`, `low`, `medium`, `high` | openai |
+
+`output_format`:
+
+| Value | Supported by |
+|-------|--------------|
+| `png`, `jpeg` | google, openai, qwen |
+| `webp`, `svg` | openai, qwen |
+
+`background`:
+
+| Value | Supported by |
+|-------|--------------|
+| `auto`, `transparent`, `opaque` | openai |
 
 ### Support matrix
 
