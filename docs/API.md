@@ -223,7 +223,7 @@ passes them through untouched.
 
 ### Enums
 
-`resolution` — available values: `480p`, `720p`, `1080p`, `1K`, `2K`, `4K`, `512`, `512p`, `540p`, `768p`
+`resolution` — available values: `480p`, `720p`, `1080p`, `1K`, `2K`, `4K`, `512`, `540p`
 
 | Provider | Supported values |
 |----------|-------------------|
@@ -232,15 +232,15 @@ passes them through untouched.
 | `vidu` | 512, 720, 1080, 720p, 1080p |
 | `seedance` | 720p |
 | `wan` | 720p |
-| `hailuo` | 540p, 720p, 1080p, 512p, 768p |
+| `hailuo` | 540p, 720p, 1080p |
 | `sora` | 720, 1080 (translates to pixel size) |
 
-`aspect_ratio` — available values: `16:9`, `9:16`, `1:1`, `4:3`, `3:4`, `3:2`, `2:3`, `21:9`, `9:21`, `auto`
+`aspect_ratio` — available values: `16:9`, `9:16`, `1:1`, `auto`
 
 | Provider | Supported values |
 |----------|-------------------|
 | `kling` | 16:9, 9:16, 1:1 |
-| `veo` | 16:9, 9:16, 4:3, 3:4, 3:2, 2:3, 21:9, 9:21 |
+| `veo` | 16:9, 9:16 |
 | `vidu` | 16:9, 9:16, auto |
 | `seedance` | 16:9, 9:16 |
 
